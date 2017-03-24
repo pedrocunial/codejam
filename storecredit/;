@@ -1,0 +1,47 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+
+typedef struct
+{
+    unsigned x;
+    unsigned har y;
+} pair;
+
+pair read_block()
+{
+    pair p;
+    unsigned j, z;
+    unsigned credit;
+    unsigned *price, i;
+    scanf("%u", &credit);
+    scanf("%u", &i);
+
+    price = malloc(i * sizeof(unsigned));
+    for (j = 0; j < i; j++) {
+        scanf("%u", &price[j]);
+    }
+
+    for (j = 0; j < i; j++) {
+        p.x = j + 1;
+        for (z = i - 1; z > j; z--) {
+            if (price[j] + price[z] == credit) {
+                p.y = z + 1;
+                return p;
+            }
+        }
+    }
+}
+
+int main(void)
+{
+    unsigned n;
+    scanf("%u", &n);
+
+    for (unsigned char i = 1; i <= n; i++) {
+       pair p = read_block();
+       printf("Case #%hhu: %u %u\n", i, p.x, p.y);
+    }
+
+    return 0;
+}
