@@ -5,13 +5,24 @@
 #include <unordered_set>
 
 
-void generate_words(std::vector<std::string> &words, unsigned char L)
+void generate_words(std::unordered_set<char> words[], unsigned char L)
 {
   unsigned char i = 0;
+  unsigned char in_par = 0;
   std::string line;
   std::cin >> line;
-  while (i < L) {
-
+  for (char c : line) {
+    switch (c) {
+    case '(':
+      in_par = true;
+      break;
+    case ')':
+      in_par = false;
+      break;
+    default:
+      words[i].insert(c);
+    }
+    if (!in_par) i++;
   }
 }
 
@@ -24,6 +35,24 @@ void create_dic(unsigned D, std::unordered_set<std::string> &dic)
   }
 }
 
+void check_words(std::unordered_set<char> words[],
+                 std::unordered_set<std::string> &dic,
+                 unsigned char L,
+                 unsigned _case)
+{
+  std::unordered_set<std::string> _dic(dic);
+  std::unordered_set<std::string> ans;
+  for (unsigned char i = 0; i < L; i++) {
+    for (std::string str : _dic) {
+      if (words[i].find(str[i]) != words[i].end())
+        ans.insert(str);
+    }
+    _dic = ans;
+    ans.clear();
+  }
+  printf("Case #%u: %lu\n", _case, _dic.size());
+}
+
 int main(void)
 {
   std::unordered_set<std::string> dic;
@@ -31,9 +60,10 @@ int main(void)
   unsigned D, N;
   scanf("%hhu %u %u", &L, &D, &N);
   create_dic(D, dic);
-  for (unsigned i = 0; i < N; i++) {
-    std::vector<std::string> words;
+  for (unsigned i = 1; i <= N; i++) {
+    std::unordered_set<char> words[L];
     generate_words(words, L);
+    check_words(words, dic, L, i);
   }
   return 0;
 }
